@@ -11,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import model.User;
 
 /**
@@ -29,13 +30,20 @@ public class SignIn extends HttpServlet {
         for (User user : users) {
             if (user.getMobile().equals(mobile)) {
                 userFound = true;
+                
+                HttpSession session = req.getSession();
+                session.setAttribute("user", user);
+                
                 resp.sendRedirect("home.jsp");
                 break;
             }
         }
         
         if (!userFound) {
-            resp.sendRedirect("sign_up.jsp");
+//            resp.sendRedirect("sign_in.jsp?error=Invalid Details");
+//            req.getRequestDispatcher("sign_in.jsp?error=Invalid Detials").forward(req, resp);
+            req.setAttribute("error", "Invalid Detials");
+            req.getRequestDispatcher("sign_in.jsp").forward(req, resp);
         }
     }
     
